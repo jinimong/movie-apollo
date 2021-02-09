@@ -47,6 +47,7 @@ const GET_MOVIES = gql`
     movies {
       id
       medium_cover_image
+      star @client
     }
   }
 `;
@@ -66,14 +67,17 @@ const Home = () => {
         <Movies>
           {data.movies.map((movie) => (
             <span
+              key={movie.id}
               style={{
                 height: '380px',
               }}
             >
               <Movie
-                key={movie.id}
                 id={movie.id}
                 medium_cover_image={movie.medium_cover_image}
+                star={movie.star}
+                useLink
+                useStar
               />
             </span>
           ))}

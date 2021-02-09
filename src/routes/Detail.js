@@ -58,11 +58,13 @@ const Suggestions = styled.ul`
 const GET_MOVIE = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
+      id
       title
       medium_cover_image
       language
       rating
       description_intro
+      star @client
     }
     suggestions(id: $id) {
       id
@@ -99,7 +101,12 @@ const Detail = () => {
             height: '450px',
           }}
         >
-          <Movie medium_cover_image={movie.medium_cover_image} />
+          <Movie
+            id={movie.id}
+            medium_cover_image={movie.medium_cover_image}
+            star={movie.star}
+            useStar
+          />
         </span>
       </DetailContainer>
       <Suggestions>
@@ -108,6 +115,7 @@ const Detail = () => {
             <Movie
               id={suggestion.id}
               medium_cover_image={suggestion.medium_cover_image}
+              useLink
             />
           </li>
         ))}
