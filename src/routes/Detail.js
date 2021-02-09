@@ -1,9 +1,14 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Movie from '../components/Movie';
 import { gql, useQuery } from '@apollo/client';
 
 const Container = styled.div`
-  height: 100vh;
+  align-items: center;
+`;
+
+const DetailContainer = styled.div`
+  height: 70vh;
   width: 100%;
   background-image: linear-gradient(-45deg, #d754ab, #fd723a);
   display: flex;
@@ -31,12 +36,23 @@ const Description = styled.p`
   font-size: 28px;
 `;
 
-const Poster = styled.div`
-  width: 25%;
-  height: 60%;
-  background-image: url(${(props) => props.bg});
-  background-size: cover;
-  background-position: center center;
+const Suggestions = styled.ul`
+  position: fixed;
+  bottom: 3%;
+  width: 100%;
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  li {
+    width: 180px;
+    height: 100%;
+  }
+
+  li + li {
+    margin-left: 20px;
+  }
 `;
 
 const GET_MOVIE = gql`
@@ -47,6 +63,10 @@ const GET_MOVIE = gql`
       language
       rating
       description_intro
+    }
+    suggestions(id: $id) {
+      id
+      medium_cover_image
     }
   }
 `;
@@ -62,17 +82,36 @@ const Detail = () => {
   if (loading || !data) {
     return <div>Loading ...</div>;
   }
-  const { movie } = data;
+  const { movie, suggestions } = data;
   return (
     <Container>
-      <Column>
-        <Title>{movie.title}</Title>
-        <SubTitle>
-          {movie.language} : {movie.rating}
-        </SubTitle>
-        <Description>{movie.description_intro}</Description>
-      </Column>
-      <Poster bg={movie.medium_cover_image} />
+      <DetailContainer>
+        <Column>
+          <Title>{movie.title}</Title>
+          <SubTitle>
+            {movie.language} : {movie.rating}
+          </SubTitle>
+          <Description>{movie.description_intro}</Description>
+        </Column>
+        <span
+          style={{
+            width: '300px',
+            height: '450px',
+          }}
+        >
+          <Movie medium_cover_image={movie.medium_cover_image} />
+        </span>
+      </DetailContainer>
+      <Suggestions>
+        {suggestions.map((suggestion) => (
+          <li key={suggestion.id}>
+            <Movie
+              id={suggestion.id}
+              medium_cover_image={suggestion.medium_cover_image}
+            />
+          </li>
+        ))}
+      </Suggestions>
     </Container>
   );
 };

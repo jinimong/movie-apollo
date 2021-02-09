@@ -65,11 +65,17 @@ const Home = () => {
       {!loading && data.movies && (
         <Movies>
           {data.movies.map((movie) => (
-            <Movie
-              key={movie.id}
-              id={movie.id}
-              medium_cover_image={movie.medium_cover_image}
-            />
+            <span
+              style={{
+                height: '380px',
+              }}
+            >
+              <Movie
+                key={movie.id}
+                id={movie.id}
+                medium_cover_image={movie.medium_cover_image}
+              />
+            </span>
           ))}
         </Movies>
       )}
